@@ -1,0 +1,45 @@
+# -------------------------
+# .NET / Visual Studio
+# -------------------------
+.vs/
+**/bin/
+**/obj/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Test / coverage output
+TestResults/
+coverage/
+*.coverage
+*.coveragexml
+
+# -------------------------
+# React / Node
+# -------------------------
+**/node_modules/
+**/dist/
+**/.vite/
+
+# Environment files / secrets
+**/.env
+**/.env.*
+!**/.env.example
+
+# -------------------------
+# IDE / Editor
+# -------------------------
+.vscode/
+
+# -------------------------
+# Operating system files
+# -------------------------
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
