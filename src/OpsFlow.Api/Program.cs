@@ -1,6 +1,5 @@
 using OpsFlow.Api.ExceptionHandling;
 using Serilog;
-using Serilog.Events;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,12 +7,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Host.UseSerilog((context, services, loggerConfiguration) =>
 {
     loggerConfiguration
-        .MinimumLevel.Information()
-        .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
-        .MinimumLevel.Override("Microsoft.Hosting.Lifetime", LogEventLevel.Information)
-        .ReadFrom.Services(services)
-        .Enrich.FromLogContext()
-        .WriteTo.Console();
+        .ReadFrom.Configuration(context.Configuration)
+        .ReadFrom.Services(services);
 });
 
 // Add services to the container.
