@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using OpsFlow.Domain.Entities;
 
 namespace OpsFlow.Infrastructure.Persistence;
 
@@ -9,6 +10,12 @@ public sealed class OpsFlowDbContext : DbContext
         : base(options)
     {
     }
+
+    public DbSet<User> Users => Set<User>();
+
+    public DbSet<Organization> Organizations => Set<Organization>();
+
+    public DbSet<OrganizationMember> OrganizationMembers => Set<OrganizationMember>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
