@@ -1,9 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using OpsFlow.Domain.Entities;
+using OpsFlow.Application.Common.Interfaces;
 
 namespace OpsFlow.Infrastructure.Persistence;
 
-public sealed class OpsFlowDbContext : DbContext
+public sealed class OpsFlowDbContext : DbContext, IUnitOfWork
 {
     public OpsFlowDbContext(
         DbContextOptions<OpsFlowDbContext> options)
