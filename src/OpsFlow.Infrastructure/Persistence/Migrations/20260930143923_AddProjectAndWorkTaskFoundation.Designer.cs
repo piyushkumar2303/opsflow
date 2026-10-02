@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using OpsFlow.Infrastructure.Persistence;
 
@@ -11,9 +12,11 @@ using OpsFlow.Infrastructure.Persistence;
 namespace OpsFlow.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(OpsFlowDbContext))]
-    partial class OpsFlowDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260930143923_AddProjectAndWorkTaskFoundation")]
+    partial class AddProjectAndWorkTaskFoundation
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,60 +24,6 @@ namespace OpsFlow.Infrastructure.Persistence.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
-
-            modelBuilder.Entity("OpsFlow.Domain.Entities.Incident", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid?>("AssignedToUserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("CreatedAtUtc")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Description")
-                        .HasMaxLength(4000)
-                        .HasColumnType("nvarchar(4000)");
-
-                    b.Property<Guid>("ProjectId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("ReportedByUserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime?>("ResolvedAtUtc")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("SequenceNumber")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Severity")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<DateTime?>("UpdatedAtUtc")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AssignedToUserId");
-
-                    b.HasIndex("ReportedByUserId");
-
-                    b.HasIndex("ProjectId", "SequenceNumber")
-                        .IsUnique();
-
-                    b.ToTable("Incidents", (string)null);
-                });
 
             modelBuilder.Entity("OpsFlow.Domain.Entities.Organization", b =>
                 {
@@ -252,26 +201,6 @@ namespace OpsFlow.Infrastructure.Persistence.Migrations
                         .IsUnique();
 
                     b.ToTable("WorkTasks", (string)null);
-                });
-
-            modelBuilder.Entity("OpsFlow.Domain.Entities.Incident", b =>
-                {
-                    b.HasOne("OpsFlow.Domain.Entities.User", null)
-                        .WithMany()
-                        .HasForeignKey("AssignedToUserId")
-                        .OnDelete(DeleteBehavior.SetNull);
-
-                    b.HasOne("OpsFlow.Domain.Entities.Project", null)
-                        .WithMany()
-                        .HasForeignKey("ProjectId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("OpsFlow.Domain.Entities.User", null)
-                        .WithMany()
-                        .HasForeignKey("ReportedByUserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("OpsFlow.Domain.Entities.OrganizationMember", b =>
