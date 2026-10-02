@@ -17,6 +17,10 @@ public sealed class OpsFlowDbContext : DbContext
 
     public DbSet<OrganizationMember> OrganizationMembers => Set<OrganizationMember>();
 
+    public DbSet<Project> Projects => Set<Project>();
+
+    public DbSet<WorkTask> WorkTasks => Set<WorkTask>();
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
