@@ -21,6 +21,8 @@ public sealed class OpsFlowDbContext : DbContext
 
     public DbSet<WorkTask> WorkTasks => Set<WorkTask>();
 
+    public DbSet<Incident> Incidents => Set<Incident>();
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
