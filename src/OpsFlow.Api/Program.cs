@@ -1,6 +1,7 @@
 using OpsFlow.Api.ExceptionHandling;
 using Serilog;
 using OpsFlow.Infrastructure;
+using OpsFlow.Application;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,6 +12,9 @@ builder.Host.UseSerilog((context, services, loggerConfiguration) =>
         .ReadFrom.Configuration(context.Configuration)
         .ReadFrom.Services(services);
 });
+
+//Add Application services
+builder.Services.AddApplication();
 
 // Add infrastructure services
 builder.Services.AddInfrastructure(builder.Configuration);
