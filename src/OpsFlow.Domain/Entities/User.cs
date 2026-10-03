@@ -10,5 +10,7 @@ public sealed class User
 
     public string LastName { get; set; } = string.Empty;
 
+    public string PasswordHash { get; set; } = string.Empty;
+
     public DateTime CreatedAtUtc { get; set; }
 }
