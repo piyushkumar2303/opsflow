@@ -2,6 +2,8 @@ using OpsFlow.Api.ExceptionHandling;
 using Serilog;
 using OpsFlow.Infrastructure;
 using OpsFlow.Application;
+using OpsFlow.Api.Authentication;
+using OpsFlow.Application.Common.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,6 +20,10 @@ builder.Services.AddApplication();
 
 // Add infrastructure services
 builder.Services.AddInfrastructure(builder.Configuration);
+
+builder.Services.AddHttpContextAccessor();
+
+builder.Services.AddScoped<ICurrentUser, CurrentUser>();
 
 // Add services to the container.
 builder.Services.AddControllers();

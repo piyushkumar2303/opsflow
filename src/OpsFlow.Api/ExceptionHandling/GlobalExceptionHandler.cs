@@ -68,6 +68,23 @@ public sealed class GlobalExceptionHandler : IExceptionHandler
                     break;
                 }
 
+            case UnauthorizedException unauthorizedException:
+                {
+                    _logger.LogWarning(
+                        "Unauthorized request. TraceId: {TraceId}",
+                        httpContext.TraceIdentifier);
+
+                    problemDetails = new ProblemDetails
+                    {
+                        Status = StatusCodes.Status401Unauthorized,
+                        Title = "Unauthorized",
+                        Detail = unauthorizedException.Message,
+                        Instance = httpContext.Request.Path
+                    };
+
+                    break;
+                }
+
             default:
                 {
                     _logger.LogError(

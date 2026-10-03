@@ -23,8 +23,5 @@ public sealed class CreateProjectCommandValidator
 
         RuleFor(command => command.Description)
             .MaximumLength(2000);
-
-        RuleFor(command => command.CreatedByUserId)
-            .NotEmpty();
     }
 }
