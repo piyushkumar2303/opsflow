@@ -39,13 +39,15 @@ public sealed class GlobalExceptionHandler : IExceptionHandler
                                 .Distinct()
                                 .ToArray());
 
-                    problemDetails = new ValidationProblemDetails(errors)
+                    problemDetails = new ProblemDetails
                     {
                         Status = StatusCodes.Status400BadRequest,
                         Title = "Validation Error",
                         Detail = "One or more validation errors occurred.",
                         Instance = httpContext.Request.Path
                     };
+
+                    problemDetails.Extensions["errors"] = errors;
 
                     break;
                 }
