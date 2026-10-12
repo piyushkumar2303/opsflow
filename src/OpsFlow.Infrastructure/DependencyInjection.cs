@@ -5,7 +5,8 @@ using OpsFlow.Infrastructure.Persistence;
 using OpsFlow.Application.Projects;
 using OpsFlow.Infrastructure.Repositories;
 using OpsFlow.Application.Common.Interfaces;
-using OpsFlow.Infrastructure.Security;  
+using OpsFlow.Infrastructure.Security;
+using OpsFlow.Application.Users;
 
 namespace OpsFlow.Infrastructure;
 
@@ -27,6 +28,8 @@ public static class DependencyInjection
             serviceProvider.GetRequiredService<OpsFlowDbContext>());
 
         services.AddScoped<IProjectRepository, ProjectRepository>();
+
+        services.AddScoped<IUserRepository, UserRepository>();
 
         services.AddScoped<IPasswordHasher, AspNetCorePasswordHasher>();
 
