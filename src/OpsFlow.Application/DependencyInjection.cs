@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using OpsFlow.Application.Projects.CreateProject;
 using OpsFlow.Application.Users.RegisterUser;
+using OpsFlow.Application.Users.LoginUser;
 
 namespace OpsFlow.Application;
 
@@ -16,6 +17,7 @@ public static class DependencyInjection
         
         services.AddScoped<RegisterUserHandler>();
 
+        services.AddScoped<LoginUserHandler>();
 
         return services;
     }
