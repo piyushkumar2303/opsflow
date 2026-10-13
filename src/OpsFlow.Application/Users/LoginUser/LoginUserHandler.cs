@@ -10,13 +10,17 @@ public sealed class LoginUserHandler
     private readonly IPasswordHasher _passwordHasher;
     private readonly IValidator<LoginUserCommand> _validator;
 
+    private readonly IAccessTokenGenerator _accessTokenGenerator;
+
     public LoginUserHandler(
-        IUserRepository userRepository,
-        IPasswordHasher passwordHasher,
-        IValidator<LoginUserCommand> validator)
+    IUserRepository userRepository,
+    IPasswordHasher passwordHasher,
+    IAccessTokenGenerator accessTokenGenerator,
+    IValidator<LoginUserCommand> validator)
     {
         _userRepository = userRepository;
         _passwordHasher = passwordHasher;
+        _accessTokenGenerator = accessTokenGenerator;
         _validator = validator;
     }
 
@@ -53,8 +57,12 @@ public sealed class LoginUserHandler
                 "Invalid email or password.");
         }
 
+        var accessToken =
+            _accessTokenGenerator.GenerateToken(user);
+
         return new LoginUserResult(
             user.Id,
-            user.Email);
+            user.Email,
+            accessToken);
     }
 }

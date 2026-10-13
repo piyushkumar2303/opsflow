@@ -2,4 +2,5 @@
 
 public sealed record LoginUserResult(
     Guid UserId,
-    string Email);
+    string Email,
+    string AccessToken);

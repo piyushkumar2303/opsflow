@@ -1,10 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using OpsFlow.Api.Contracts.Projects;
 using OpsFlow.Application.Projects.CreateProject;
+using Microsoft.AspNetCore.Authorization;
 
 namespace OpsFlow.Api.Controllers;
 
 [ApiController]
+[Authorize]
 [Route("api/projects")]
 public sealed class ProjectsController : ControllerBase
 {
