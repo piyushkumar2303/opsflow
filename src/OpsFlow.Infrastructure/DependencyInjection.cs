@@ -33,6 +33,10 @@ public static class DependencyInjection
 
         services.AddScoped<IPasswordHasher, AspNetCorePasswordHasher>();
 
+        services.Configure<JwtOptions>(configuration.GetSection(JwtOptions.SectionName));
+
+        services.AddScoped<IAccessTokenGenerator, JwtAccessTokenGenerator>();
+
         return services;
     }
 }
