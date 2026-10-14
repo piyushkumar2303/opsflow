@@ -7,6 +7,7 @@ using OpsFlow.Infrastructure.Repositories;
 using OpsFlow.Application.Common.Interfaces;
 using OpsFlow.Infrastructure.Security;
 using OpsFlow.Application.Users;
+using OpsFlow.Application.Organizations;
 
 namespace OpsFlow.Infrastructure;
 
@@ -30,6 +31,10 @@ public static class DependencyInjection
         services.AddScoped<IProjectRepository, ProjectRepository>();
 
         services.AddScoped<IUserRepository, UserRepository>();
+
+        services.AddScoped<IOrganizationRepository, OrganizationRepository>();
+
+        services.AddScoped<IOrganizationMemberRepository, OrganizationMemberRepository>();
 
         services.AddScoped<IPasswordHasher, AspNetCorePasswordHasher>();
 
