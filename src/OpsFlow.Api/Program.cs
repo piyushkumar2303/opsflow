@@ -1,12 +1,13 @@
-using OpsFlow.Api.ExceptionHandling;
-using Serilog;
-using OpsFlow.Infrastructure;
-using OpsFlow.Application;
-using OpsFlow.Api.Authentication;
-using OpsFlow.Application.Common.Interfaces;
-using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using OpsFlow.Api.Authentication;
+using OpsFlow.Api.ExceptionHandling;
+using OpsFlow.Api.OpenApi;
+using OpsFlow.Application;
+using OpsFlow.Application.Common.Interfaces;
+using OpsFlow.Infrastructure;
+using Serilog;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -30,7 +31,10 @@ builder.Services.AddScoped<ICurrentUser, CurrentUser>();
 
 // Add services to the container.
 builder.Services.AddControllers();
-builder.Services.AddOpenApi();
+builder.Services.AddOpenApi(options =>
+{
+    options.AddDocumentTransformer<BearerSecuritySchemeTransformer>();
+});
 
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 builder.Services.AddProblemDetails();
