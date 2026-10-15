@@ -35,17 +35,23 @@ public sealed class BearerSecuritySchemeTransformer(
                 }
             };
 
-        foreach (var operation in document.Paths.Values.SelectMany(path => path.Operations))
+        foreach (var path in document.Paths.Values)
         {
-            operation.Value.Security ??= [];
+            if (path.Operations is null)
+            {
+                continue;
+            }
 
-            operation.Value.Security.Add(
-                new OpenApiSecurityRequirement
-                {
-                    [new OpenApiSecuritySchemeReference(
-                        "Bearer",
-                        document)] = []
-                });
+            foreach (var operation in path.Operations.Values)
+            {
+                operation.Security ??= [];
+
+                operation.Security.Add(
+                    new OpenApiSecurityRequirement
+                    {
+                        [new OpenApiSecuritySchemeReference("Bearer", document)] = []
+                    });
+            }
         }
     }
 }
