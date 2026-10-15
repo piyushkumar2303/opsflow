@@ -2,6 +2,7 @@
 using OpsFlow.Api.Contracts.Projects;
 using OpsFlow.Application.Projects.CreateProject;
 using Microsoft.AspNetCore.Authorization;
+using OpsFlow.Application.Projects.GetProjectById;
 
 namespace OpsFlow.Api.Controllers;
 
@@ -11,11 +12,14 @@ namespace OpsFlow.Api.Controllers;
 public sealed class ProjectsController : ControllerBase
 {
     private readonly CreateProjectHandler _createProjectHandler;
+    private readonly GetProjectByIdHandler _getProjectByIdHandler;
 
     public ProjectsController(
-        CreateProjectHandler createProjectHandler)
+        CreateProjectHandler createProjectHandler,
+        GetProjectByIdHandler getProjectByIdHandler)
     {
         _createProjectHandler = createProjectHandler;
+        _getProjectByIdHandler = getProjectByIdHandler;
     }
 
     [HttpPost]
@@ -38,5 +42,20 @@ public sealed class ProjectsController : ControllerBase
         var result = await _createProjectHandler.HandleAsync(command, cancellationToken);
 
         return StatusCode(StatusCodes.Status201Created, result);
+    }
+
+    [HttpGet("{id:guid}")]
+    [ProducesResponseType(typeof(GetProjectByIdResult), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> GetById(Guid id, CancellationToken cancellationToken)
+    {
+        var query = new GetProjectByIdQuery(id);
+
+        var result = await _getProjectByIdHandler.HandleAsync(query, cancellationToken);
+
+        return Ok(result);
     }
 }

@@ -4,6 +4,7 @@ using OpsFlow.Application.Projects.CreateProject;
 using OpsFlow.Application.Users.RegisterUser;
 using OpsFlow.Application.Users.LoginUser;
 using OpsFlow.Application.Organizations.CreateOrganization;
+using OpsFlow.Application.Projects.GetProjectById;
 
 namespace OpsFlow.Application;
 
@@ -15,6 +16,8 @@ public static class DependencyInjection
         services.AddValidatorsFromAssemblyContaining<CreateProjectCommandValidator>();
 
         services.AddScoped<CreateProjectHandler>();
+
+        services.AddScoped<GetProjectByIdHandler>();
 
         services.AddScoped<CreateOrganizationHandler>();
 
