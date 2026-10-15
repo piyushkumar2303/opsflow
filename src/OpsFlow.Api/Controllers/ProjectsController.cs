@@ -19,13 +19,15 @@ public sealed class ProjectsController : ControllerBase
     }
 
     [HttpPost]
-    [ProducesResponseType<CreateProjectResult>(StatusCodes.Status201Created)]
-    [ProducesResponseType<ValidationProblemDetails>(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType<ProblemDetails>(StatusCodes.Status401Unauthorized)]
-    [ProducesResponseType<ProblemDetails>(StatusCodes.Status409Conflict)]
-    public async Task<ActionResult<CreateProjectResult>> CreateAsync(
-        CreateProjectRequest request,
-        CancellationToken cancellationToken)
+    [ProducesResponseType(typeof(CreateProjectResult), StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status409Conflict)]
+    public async Task<IActionResult> Create(
+    CreateProjectRequest request,
+    CancellationToken cancellationToken)
     {
         var command = new CreateProjectCommand(
             request.OrganizationId,
@@ -33,12 +35,8 @@ public sealed class ProjectsController : ControllerBase
             request.Key,
             request.Description);
 
-        var result = await _createProjectHandler.HandleAsync(
-            command,
-            cancellationToken);
+        var result = await _createProjectHandler.HandleAsync(command, cancellationToken);
 
-        return StatusCode(
-            StatusCodes.Status201Created,
-            result);
+        return StatusCode(StatusCodes.Status201Created, result);
     }
 }

@@ -87,6 +87,42 @@ public sealed class GlobalExceptionHandler : IExceptionHandler
                     break;
                 }
 
+            case ForbiddenException forbiddenException:
+                {
+                    _logger.LogWarning(
+                        exception,
+                        "Forbidden request. TraceId: {TraceId}",
+                        httpContext.TraceIdentifier);
+
+                    problemDetails = new ProblemDetails
+                    {
+                        Status = StatusCodes.Status403Forbidden,
+                        Title = "Forbidden",
+                        Detail = forbiddenException.Message,
+                        Instance = httpContext.Request.Path
+                    };
+
+                    break;
+                }
+
+            case NotFoundException notFoundException:
+                {
+                    _logger.LogWarning(
+                        exception,
+                        "Resource not found. TraceId: {TraceId}",
+                        httpContext.TraceIdentifier);
+
+                    problemDetails = new ProblemDetails
+                    {
+                        Status = StatusCodes.Status404NotFound,
+                        Title = "Not Found",
+                        Detail = notFoundException.Message,
+                        Instance = httpContext.Request.Path
+                    };
+
+                    break;
+                }
+
             default:
                 {
                     _logger.LogError(

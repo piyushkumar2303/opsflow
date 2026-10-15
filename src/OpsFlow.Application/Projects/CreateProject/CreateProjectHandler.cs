@@ -3,6 +3,7 @@ using OpsFlow.Application.Common.Interfaces;
 using OpsFlow.Domain.Entities;
 using OpsFlow.Domain.Enums;
 using FluentValidation;
+using OpsFlow.Application.Organizations;
 
 namespace OpsFlow.Application.Projects.CreateProject;
 
@@ -12,14 +13,20 @@ public sealed class CreateProjectHandler
     private readonly IUnitOfWork _unitOfWork;
     private readonly IValidator<CreateProjectCommand> _validator;
     private readonly ICurrentUser _currentUser;
+    private readonly IOrganizationRepository _organizationRepository;
+    private readonly IOrganizationMemberRepository _organizationMemberRepository;
 
     public CreateProjectHandler(
-    IProjectRepository projectRepository,
-    IUnitOfWork unitOfWork,
-    IValidator<CreateProjectCommand> validator,
-    ICurrentUser currentUser)
+        IProjectRepository projectRepository,
+        IOrganizationRepository organizationRepository,
+        IOrganizationMemberRepository organizationMemberRepository,
+        IUnitOfWork unitOfWork,
+        IValidator<CreateProjectCommand> validator,
+        ICurrentUser currentUser)
     {
         _projectRepository = projectRepository;
+        _organizationRepository = organizationRepository;
+        _organizationMemberRepository = organizationMemberRepository;
         _unitOfWork = unitOfWork;
         _validator = validator;
         _currentUser = currentUser;
@@ -29,18 +36,42 @@ public sealed class CreateProjectHandler
     CreateProjectCommand command,
     CancellationToken cancellationToken = default)
     {
-        await _validator.ValidateAndThrowAsync(
-            command,
-            cancellationToken);
+        await _validator.ValidateAndThrowAsync(command, cancellationToken);
 
-        if (!_currentUser.IsAuthenticated ||
-            _currentUser.UserId is null)
+        if (!_currentUser.IsAuthenticated || _currentUser.UserId is null)
         {
             throw new UnauthorizedException(
                 "An authenticated user is required to create a project.");
         }
 
         var currentUserId = _currentUser.UserId.Value;
+
+        var organizationExists = await _organizationRepository.ExistsAsync(
+            command.OrganizationId,
+            cancellationToken);
+
+        if (!organizationExists)
+        {
+            throw new NotFoundException(
+                "Organization was not found.");
+        }
+
+        var membership = await _organizationMemberRepository.GetByOrganizationAndUserAsync(
+            command.OrganizationId,
+            currentUserId,
+            cancellationToken);
+
+        if (membership is null)
+        {
+            throw new ForbiddenException(
+                "You do not have access to this organization.");
+        }
+
+        if (membership.Role is not OrganizationRole.Admin and not OrganizationRole.Manager)
+        {
+            throw new ForbiddenException(
+                "You do not have permission to create projects in this organization.");
+        }
 
         var name = command.Name.Trim();
         var key = command.Key.Trim().ToUpperInvariant();
