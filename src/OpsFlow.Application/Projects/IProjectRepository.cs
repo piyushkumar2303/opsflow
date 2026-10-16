@@ -1,4 +1,6 @@
 ﻿using OpsFlow.Domain.Entities;
+using OpsFlow.Application.Common.Models;
+using OpsFlow.Application.Projects.ListProjects;
 
 namespace OpsFlow.Application.Projects;
 
@@ -15,5 +17,9 @@ public interface IProjectRepository
 
     Task AddAsync(
         Project project,
+        CancellationToken cancellationToken = default);
+
+    Task<PagedResult<ProjectListItem>> ListAsync(
+        ListProjectsQuery query,
         CancellationToken cancellationToken = default);
 }
