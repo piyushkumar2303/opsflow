@@ -6,6 +6,7 @@ using OpsFlow.Application.Users.LoginUser;
 using OpsFlow.Application.Organizations.CreateOrganization;
 using OpsFlow.Application.Projects.GetProjectById;
 using OpsFlow.Application.Projects.ListProjects;
+using OpsFlow.Application.Organizations.ListMyOrganizations;
 
 namespace OpsFlow.Application;
 
@@ -23,6 +24,8 @@ public static class DependencyInjection
         services.AddScoped<ListProjectsHandler>();
 
         services.AddScoped<CreateOrganizationHandler>();
+        
+        services.AddScoped<ListMyOrganizationsHandler>();
 
         services.AddScoped<RegisterUserHandler>();
 

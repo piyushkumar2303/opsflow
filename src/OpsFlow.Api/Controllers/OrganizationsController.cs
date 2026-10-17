@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using OpsFlow.Api.Contracts.Organizations;
 using OpsFlow.Application.Organizations.CreateOrganization;
+using OpsFlow.Application.Organizations.ListMyOrganizations;
 
 namespace OpsFlow.Api.Controllers;
 
@@ -11,11 +12,14 @@ namespace OpsFlow.Api.Controllers;
 public sealed class OrganizationsController : ControllerBase
 {
     private readonly CreateOrganizationHandler _createOrganizationHandler;
+    private readonly ListMyOrganizationsHandler _listMyOrganizationsHandler;
 
     public OrganizationsController(
-        CreateOrganizationHandler createOrganizationHandler)
+        CreateOrganizationHandler createOrganizationHandler,
+        ListMyOrganizationsHandler listMyOrganizationsHandler)
     {
         _createOrganizationHandler = createOrganizationHandler;
+        _listMyOrganizationsHandler = listMyOrganizationsHandler;
     }
 
     [HttpPost]
@@ -36,5 +40,15 @@ public sealed class OrganizationsController : ControllerBase
         return StatusCode(
             StatusCodes.Status201Created,
             result);
+    }
+
+    [HttpGet("mine")]
+    [ProducesResponseType(typeof(IReadOnlyList<MyOrganizationItem>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
+    public async Task<IActionResult> GetMine(CancellationToken cancellationToken)
+    {
+        var result = await _listMyOrganizationsHandler.HandleAsync(cancellationToken);
+
+        return Ok(result);
     }
 }
